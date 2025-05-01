@@ -40,13 +40,13 @@ st.title("Emotion Classifier")
 # About Section:
 st.markdown("""
 This application uses a machine learning model to detect emotions from images or webcam input.  
-It demonstrates skills in **computer vision**, **machine learning**, and **web app development**.
+It demonstrates skills in **computer vision** and **machine learning**.
 """)
 
 # How it works section:
 st.header("How It Works")
 st.markdown("""
-1. **Image Upload or Webcam Input**: Users can upload an image or use their webcam.
+1. **Image Upload or Webcam Input**: Users can upload an image or use their webcam from the sidebar options.
 2. **Preprocessing**: The image is converted to grayscale, resized, and normalized.
 3. **Feature Extraction**: HOG (Histogram of Oriented Gradients) features are extracted.
 4. **Emotion Prediction**: A pre-trained SVM model predicts the emotion.
@@ -85,14 +85,33 @@ if input_method == "Upload Image":
 elif input_method == "Use Webcam":
     # Start webcam capture
     st.write("Click 'Start Webcam' to begin capturing video.")
-    start_webcam = st.button("Start Webcam")
+    
+    # Create placeholders for buttons
+    start_button_placeholder = st.empty()
+    stop_button_placeholder = st.empty()
+
+    # Display the Start Webcam button
+    start_webcam = start_button_placeholder.button("Start Webcam")
 
     if start_webcam:
+        # Hide the Start Webcam button
+        start_button_placeholder.empty()
+
         # OpenCV video capture
         cap = cv2.VideoCapture(0)
         stframe = st.empty()
 
+        # Display the Stop Webcam button
+        stop_webcam = stop_button_placeholder.button("Stop Webcam")
+
         while True:
+            # Close webcam if 'Stop Webcam' button is pressed
+            if stop_webcam:
+                st.write("Webcam stopped.")
+                # Hide the Stop Webcam button
+                stop_button_placeholder.empty()  
+                break
+
             ret, frame = cap.read()
             if not ret:
                 st.error("Failed to capture video")
@@ -124,5 +143,6 @@ elif input_method == "Use Webcam":
             # Display the frame in Streamlit
             stframe.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
 
+        # Release resources when the loop ends
         cap.release()
         cv2.destroyAllWindows()
