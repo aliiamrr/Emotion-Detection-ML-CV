@@ -108,6 +108,8 @@ elif input_method == "Use Webcam":
             # Close webcam if 'Stop Webcam' button is pressed
             if stop_webcam:
                 st.write("Webcam stopped.")
+                cap.release()
+                cv2.destroyAllWindows()
                 # Hide the Stop Webcam button
                 stop_button_placeholder.empty()  
                 break
