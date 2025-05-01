@@ -34,7 +34,24 @@ def extract_hog_features(image):
                    cells_per_block=(2, 2), block_norm='L2-Hys', visualize=False)
     return features
 
+# Title
 st.title("Emotion Classifier")
+
+# About Section:
+st.markdown("""
+This application uses a machine learning model to detect emotions from images or webcam input.  
+It demonstrates skills in **computer vision**, **machine learning**, and **web app development**.
+""")
+
+# How it works section:
+st.header("How It Works")
+st.markdown("""
+1. **Image Upload or Webcam Input**: Users can upload an image or use their webcam.
+2. **Preprocessing**: The image is converted to grayscale, resized, and normalized.
+3. **Feature Extraction**: HOG (Histogram of Oriented Gradients) features are extracted.
+4. **Emotion Prediction**: A pre-trained SVM model predicts the emotion.
+5. **Result Display**: The detected emotion is displayed on the screen.
+""")
 
 # Added line (Side bar to choose input method (Upload Image or Use Webcam))
 input_method = st.sidebar.selectbox("Select Input Method", ("Upload Image", "Use Webcam"))
