@@ -1,0 +1,5 @@
+# Ignore the pdf files
+*.pdf
+
+# Ignore the pkl files
+*.pkl
