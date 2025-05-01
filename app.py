@@ -12,7 +12,7 @@ svm_model = joblib.load('emotion_classifier.pkl')
 le = joblib.load('label_encoder.pkl')
 
 # Checking if the app is running locally or on Streamlit Cloud (NEW)
-is_cloud = os.getenv("IS_CLOUD", "false").lower() == "true"
+is_cloud = os.getenv("IS_CLOUD", "false").lower() == "true" or "STREAMLIT_SERVER_PORT" in os.environ
 
 # Preprocessing function (Same steps as during training)
 def preprocess_image(image):
@@ -88,7 +88,9 @@ if input_method == "Upload Image":
         
 ## ADDITIONAL FUNCTIONALITY: TO USE WEBCAM IN THE APP
 elif input_method == "Use Webcam":
+    st.write(f"Running in cloud: {is_cloud}")
     if is_cloud:
+            st.write("Using streamlit-webrtc for webcam input.")
             class EmotionDetectionTransformer(VideoTransformerBase):
                 def transform(self, frame):
                     img = frame.to_ndarray(format="bgr24")
