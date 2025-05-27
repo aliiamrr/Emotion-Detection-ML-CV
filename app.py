@@ -118,6 +118,15 @@ elif input_method == "Use Webcam":
                         cv2.putText(img, emotion_label_text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
 
                     return img
+#     webrtc_streamer(
+#     key="emotion-detection",
+#     video_transformer_factory=EmotionDetectionTransformer,
+#     rtc_configuration={
+#         "iceServers": [
+#             {"urls": "stun:stun.l.google.com:19302"}
+#         ]
+#     }
+# )
 
     # ENVIRONMENT VARIABLES FOR TWILIO CONFIGURATION
     TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -127,29 +136,20 @@ elif input_method == "Use Webcam":
         key="emotion-detection",
         video_transformer_factory=EmotionDetectionTransformer,
         rtc_configuration = {
-        "iceServers": [
-            # STUN server 
-            {
-                "urls": "stun:global.stun.twilio.com:3478"
-            },
-            # TURN servers
-            {
-                "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                "username": TWILIO_ACCOUNT_SID,
-                "credential": TWILIO_AUTH_TOKEN
-            },
-            {
-                "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "username": TWILIO_ACCOUNT_SID,
-                "credential": TWILIO_AUTH_TOKEN
-            },
-            {
-                "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                "username": TWILIO_ACCOUNT_SID,
-                "credential": TWILIO_AUTH_TOKEN
-            }
-        ]
-    }
+            "iceServers": [
+                {"urls": "stun:global.stun.twilio.com:3478"},
+                {
+                    "urls": "turn:global.turn.twilio.com:3478",
+                    "username": TWILIO_ACCOUNT_SID,
+                    "credential": TWILIO_AUTH_TOKEN
+                },
+                {
+                    "urls": "turn:global.turn.twilio.com:443",
+                    "username": TWILIO_ACCOUNT_SID,
+                    "credential": TWILIO_AUTH_TOKEN
+                }
+            ]
+        }
 ) 
     # else: 
     #     st.write("Click 'Start Webcam' to begin capturing video.")
