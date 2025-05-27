@@ -8,7 +8,7 @@ from PIL import Image
 import os
 
 '''
-Note: YOOOOOOOOOOOOOO Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
+Note: ZAMN Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
 '''
 
 # Load the trained model and LabelEncoder
@@ -120,18 +120,19 @@ elif input_method == "Use Webcam":
                     return img
 
     webrtc_streamer(
-    key="emotion-detection",
-    video_transformer_factory=EmotionDetectionTransformer,
-    rtc_configuration={
-        "iceServers": [
-            {"urls": "stun:stun.l.google.com:19302"},
-            {"urls": "stun:stun1.l.google.com:19302"},
-            {"urls": "stun:stun2.l.google.com:19302"},
-            {"urls": "stun:stun.stunprotocol.org:3478"}
-        ]
-    }
-
-)   
+        key="emotion-detection",
+        video_transformer_factory=EmotionDetectionTransformer,
+        rtc_configuration={
+            "iceServers": [
+                {"urls": ["stun:stun.l.google.com:19302"]},
+                {
+                    "urls": ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443"],
+                    "username": "openrelayproject",
+                    "credential": "openrelayproject"
+                }
+            ]
+        }
+) 
     # else: 
     #     st.write("Click 'Start Webcam' to begin capturing video.")
     #     # Create placeholders for buttons
