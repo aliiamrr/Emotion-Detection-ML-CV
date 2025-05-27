@@ -89,9 +89,8 @@ if input_method == "Upload Image":
         
 ## ADDITIONAL FUNCTIONALITY: TO USE WEBCAM IN THE APP
 elif input_method == "Use Webcam":
-    st.write(f"Running in cloud: {is_cloud}")
+    st.write("Click 'Start' to begin capturing video.")
     if is_cloud:
-            st.write("Using streamlit-webrtc for webcam input.")
             class EmotionDetectionTransformer(VideoTransformerBase):
                 def transform(self, frame):
                     img = frame.to_ndarray(format="bgr24")
@@ -116,13 +115,10 @@ elif input_method == "Use Webcam":
 
                     return img
 
-            st.write("Using streamlit-webrtc for webcam input.")
             webrtc_streamer(key="emotion-detection", video_transformer_factory=EmotionDetectionTransformer)
     
-    else:
-        # Start webcam capture
+    else: 
         st.write("Click 'Start Webcam' to begin capturing video.")
-        
         # Create placeholders for buttons
         start_button_placeholder = st.empty()
         stop_button_placeholder = st.empty()
