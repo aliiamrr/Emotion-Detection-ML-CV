@@ -119,19 +119,33 @@ elif input_method == "Use Webcam":
 
                     return img
 
+    # ENVIRONMENT VARIABLES FOR TWILIO CONFIGURATION
+    TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+    TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+
     webrtc_streamer(
         key="emotion-detection",
         video_transformer_factory=EmotionDetectionTransformer,
-        rtc_configuration={
-            "iceServers": [
-                {"urls": ["stun:stun.l.google.com:19302"]},
-                {
-                    "urls": ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443"],
-                    "username": "openrelayproject",
-                    "credential": "openrelayproject"
-                }
-            ]
-        }
+        rtc_configuration = {
+        "iceServers": [
+            {"urls": "stun:global.stun.twilio.com:3478?transport=udp"},
+            {
+                "urls": "turn:global.turn.twilio.com:3478?transport=udp",
+                "username": TWILIO_ACCOUNT_SID,
+                "credential": TWILIO_AUTH_TOKEN
+            },
+            {
+                "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
+                "username": TWILIO_ACCOUNT_SID,
+                "credential": TWILIO_AUTH_TOKEN
+            },
+            {
+                "urls": "turn:global.turn.twilio.com:443?transport=tcp",
+                "username": TWILIO_ACCOUNT_SID,
+                "credential": TWILIO_AUTH_TOKEN
+            }
+        ]
+}
 ) 
     # else: 
     #     st.write("Click 'Start Webcam' to begin capturing video.")
