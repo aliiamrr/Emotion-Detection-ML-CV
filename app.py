@@ -8,7 +8,7 @@ from PIL import Image
 import os
 
 '''
-NOTE: Temporarily removed the local option for webcam inpput and will only use the Streamlit Cloud option.
+NOTE: Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
 '''
 
 # Load the trained model and LabelEncoder
