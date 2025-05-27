@@ -128,7 +128,11 @@ elif input_method == "Use Webcam":
         video_transformer_factory=EmotionDetectionTransformer,
         rtc_configuration = {
         "iceServers": [
-            {"urls": "stun:global.stun.twilio.com:3478?transport=udp"},
+            # STUN server 
+            {
+                "urls": "stun:global.stun.twilio.com:3478"
+            },
+            # TURN servers
             {
                 "urls": "turn:global.turn.twilio.com:3478?transport=udp",
                 "username": TWILIO_ACCOUNT_SID,
@@ -145,7 +149,7 @@ elif input_method == "Use Webcam":
                 "credential": TWILIO_AUTH_TOKEN
             }
         ]
-}
+    }
 ) 
     # else: 
     #     st.write("Click 'Start Webcam' to begin capturing video.")
