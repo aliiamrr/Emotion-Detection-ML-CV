@@ -7,13 +7,17 @@ import joblib
 from PIL import Image
 import os
 
+'''
+NOTE: Temporarily removed the local option for webcam inpput and will only use the Streamlit Cloud option.
+'''
+
 # Load the trained model and LabelEncoder
 svm_model = joblib.load('emotion_classifier.pkl')
 le = joblib.load('label_encoder.pkl')
 
-# Checking if the app is running locally or on Streamlit Cloud (NEW)
-# Let the user manually toggle cloud mode from the sidebar
-is_cloud = st.sidebar.checkbox("Running on Streamlit Cloud?", value=True)
+# # Checking if the app is running locally or on Streamlit Cloud (NEW)
+# # Let the user manually toggle cloud mode from the sidebar
+# is_cloud = st.sidebar.checkbox("Running on Streamlit Cloud?", value=True)
 
 # Preprocessing function (Same steps as during training)
 def preprocess_image(image):
@@ -90,8 +94,8 @@ if input_method == "Upload Image":
 ## ADDITIONAL FUNCTIONALITY: TO USE WEBCAM IN THE APP
 elif input_method == "Use Webcam":
     st.write("Click 'Start' to begin capturing video.")
-    if is_cloud:
-            class EmotionDetectionTransformer(VideoTransformerBase):
+    # if is_cloud:
+    class EmotionDetectionTransformer(VideoTransformerBase):
                 def transform(self, frame):
                     img = frame.to_ndarray(format="bgr24")
 
@@ -115,69 +119,69 @@ elif input_method == "Use Webcam":
 
                     return img
 
-            webrtc_streamer(key="emotion-detection", video_transformer_factory=EmotionDetectionTransformer)
+    webrtc_streamer(key="emotion-detection", video_transformer_factory=EmotionDetectionTransformer)
     
-    else: 
-        st.write("Click 'Start Webcam' to begin capturing video.")
-        # Create placeholders for buttons
-        start_button_placeholder = st.empty()
-        stop_button_placeholder = st.empty()
+    # else: 
+    #     st.write("Click 'Start Webcam' to begin capturing video.")
+    #     # Create placeholders for buttons
+    #     start_button_placeholder = st.empty()
+    #     stop_button_placeholder = st.empty()
 
-        # Display the Start Webcam button
-        start_webcam = start_button_placeholder.button("Start Webcam")
+    #     # Display the Start Webcam button
+    #     start_webcam = start_button_placeholder.button("Start Webcam")
 
-        if start_webcam:
-            # Hide the Start Webcam button
-            start_button_placeholder.empty()
+    #     if start_webcam:
+    #         # Hide the Start Webcam button
+    #         start_button_placeholder.empty()
 
-            # OpenCV video capture
-            cap = cv2.VideoCapture(0)
-            stframe = st.empty()
+    #         # OpenCV video capture
+    #         cap = cv2.VideoCapture(0)
+    #         stframe = st.empty()
 
-            # Display the Stop Webcam button
-            stop_webcam = stop_button_placeholder.button("Stop Webcam")
+    #         # Display the Stop Webcam button
+    #         stop_webcam = stop_button_placeholder.button("Stop Webcam")
 
-            while True:
-                # Close webcam if 'Stop Webcam' button is pressed
-                if stop_webcam:
-                    st.write("Webcam stopped.")
-                    cap.release()
-                    cv2.destroyAllWindows()
-                    # Hide the Stop Webcam button
-                    stop_button_placeholder.empty()  
-                    break
+    #         while True:
+    #             # Close webcam if 'Stop Webcam' button is pressed
+    #             if stop_webcam:
+    #                 st.write("Webcam stopped.")
+    #                 cap.release()
+    #                 cv2.destroyAllWindows()
+    #                 # Hide the Stop Webcam button
+    #                 stop_button_placeholder.empty()  
+    #                 break
 
-                ret, frame = cap.read()
-                if not ret:
-                    st.error("Failed to capture video")
-                    break
+    #             ret, frame = cap.read()
+    #             if not ret:
+    #                 st.error("Failed to capture video")
+    #                 break
 
-                # Convert frame to grayscale
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #             # Convert frame to grayscale
+    #             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-                # Detect faces using Haar Cascade
-                face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-                faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    #             # Detect faces using Haar Cascade
+    #             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    #             faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
 
-                for (x, y, w, h) in faces:
-                    # Extract the face region
-                    face = gray[y:y+h, x:x+w]
+    #             for (x, y, w, h) in faces:
+    #                 # Extract the face region
+    #                 face = gray[y:y+h, x:x+w]
 
-                    # Preprocess the face
-                    preprocessed_face = preprocess_image(face)
-                    hog_features = extract_hog_features(preprocessed_face)
+    #                 # Preprocess the face
+    #                 preprocessed_face = preprocess_image(face)
+    #                 hog_features = extract_hog_features(preprocessed_face)
 
-                    # Predict the emotion
-                    emotion_label_num = svm_model.predict([hog_features])[0]
-                    emotion_label_text = le.inverse_transform([emotion_label_num])[0]
+    #                 # Predict the emotion
+    #                 emotion_label_num = svm_model.predict([hog_features])[0]
+    #                 emotion_label_text = le.inverse_transform([emotion_label_num])[0]
 
-                    # Draw rectangle and label
-                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-                    cv2.putText(frame, emotion_label_text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+    #                 # Draw rectangle and label
+    #                 cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    #                 cv2.putText(frame, emotion_label_text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
 
-                # Display the frame in Streamlit
-                stframe.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+    #             # Display the frame in Streamlit
+    #             stframe.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
 
-            # Release resources when the loop ends
-            cap.release()
-            cv2.destroyAllWindows()
+    #         # Release resources when the loop ends
+    #         cap.release()
+    #         cv2.destroyAllWindows()
