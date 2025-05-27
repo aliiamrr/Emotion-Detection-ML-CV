@@ -8,7 +8,7 @@ from PIL import Image
 import os
 
 '''
-NOTE: Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
+Note: Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
 '''
 
 # Load the trained model and LabelEncoder
@@ -119,8 +119,13 @@ elif input_method == "Use Webcam":
 
                     return img
 
-    webrtc_streamer(key="emotion-detection", video_transformer_factory=EmotionDetectionTransformer)
-    
+    webrtc_streamer(
+    key="emotion-detection",
+    video_transformer_factory=EmotionDetectionTransformer,
+    rtc_configuration={
+        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+    }
+)   
     # else: 
     #     st.write("Click 'Start Webcam' to begin capturing video.")
     #     # Create placeholders for buttons
