@@ -7,9 +7,8 @@ import joblib
 from PIL import Image
 import os
 
-'''
-Note: ZAMN Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
-'''
+# Note : ZAMN Temporarily removed the local option for webcam input and will only use the Streamlit Cloud option.
+
 
 # Load the trained model and LabelEncoder
 svm_model = joblib.load('emotion_classifier.pkl')
